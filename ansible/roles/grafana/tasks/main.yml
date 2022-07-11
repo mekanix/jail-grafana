@@ -1,0 +1,28 @@
+---
+- name: install grafana packages
+  with_items: "{{ grafana_packages }}"
+  package:
+    name: "{{ item.name }}"
+    state: latest
+  notify:
+    - restart grafana
+
+- name: enable grafana
+  template:
+    src: "grafana.j2"
+    dest: "/etc/rc.conf.d/grafana"
+    owner: "root" 
+    group: "wheel"
+    mode: 0644
+  notify:
+    - restart grafana
+
+- name: enable prometheus
+  template:
+    src: "prometheus.j2"
+    dest: "/etc/rc.conf.d/prometheus"
+    owner: "root" 
+    group: "wheel"
+    mode: 0644
+  notify:
+    - restart prometheus
